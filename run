@@ -2,7 +2,7 @@
 
 while true
 do
-    export PYTHONPATH=/root/app/;
+    export PYTHONPATH=/root/app/dnote;
     exec gunicorn dnote:DNOTE \
       --bind=0.0.0.0:8080 \
       --name=dnote \

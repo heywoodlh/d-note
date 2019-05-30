@@ -1,4 +1,4 @@
-FROM python:2
+FROM python:3
 
 WORKDIR /root/app/
 
@@ -9,6 +9,8 @@ COPY . .
 COPY d-note-docker.ini /etc/dnote/d-note.ini
 
 RUN python ./setup.py install
+
+RUN mkdir -p /var/lib/dnote/data
 
 RUN generate_dnote_hashes
 

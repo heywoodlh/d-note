@@ -8,27 +8,28 @@ from Crypto.Hash import HMAC, SHA512
 from Crypto.Protocol import KDF
 from Crypto.Util import Counter
 
-import ConfigParser
+import configparser
+import binascii
 
 # copy the config file from conf dir to either /etc/dnote or ~/.dnote,
 # then run this script.
 
-config = ConfigParser.SafeConfigParser()
+config = configparser.ConfigParser()
 
 for path in ['/etc/dnote', '~/.dnote']:
     expanded_path = "{0}/{1}".format(os.path.expanduser(path), 'd-note.ini')
     if os.path.exists(expanded_path):
       try:
           f = open(expanded_path)
-          config.readfp(f)
+          config.read_file(f)
           f.close()
-      except ConfigParser.InterpolationSyntaxError as e:
+      except configparser.InterpolationSyntaxError as e:
           raise EOFError("Unable to parse configuration file properly: {0}".format(e))
 
 cfgs = {}
 
 for section in config.sections():
-    if not cfgs.has_key(section):
+    if section not in cfgs:
         cfgs[section] = {}
 
     for k, v in config.items(section):
@@ -43,7 +44,7 @@ sys.path.append(dconfig_path)
 try:
     import dconfig
 except ImportError:
-    print "You need to run 'generate_dnote_hashes' as part of the installation."
+    print("You need to run 'generate_dnote_hashes' as part of the installation.")
     os.sys.exit(1)
 
 data_dir = os.path.expanduser(cfgs['dnote']['data_dir'])
